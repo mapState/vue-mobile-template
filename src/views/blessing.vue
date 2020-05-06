@@ -20,7 +20,7 @@ export default {
       msg: "Hello vue-baberrage",
       barrageIsShow: true,
       currentId: 0,
-      barrageLoop: false,
+      barrageLoop: true,
       barrageList: []
     };
   },
