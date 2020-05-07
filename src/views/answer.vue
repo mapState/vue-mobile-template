@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="bgBox">
-      <h4 class="title">答题闯关</h4>
+      <div class="title">答题闯关</div>
       <p class="detail">世纪风华，德业日新。 职教引领，卓哉吾校。 济济群贤，相约云端。</p>
       <span class="count">共有20222次闯关</span>
       <img src="../../static/img/button.png" alt class="btn" @click="goBreak" />
@@ -86,7 +86,7 @@ export default {
   color: rgba(91, 54, 7, 1);
   position: absolute;
   top: 34px;
-  left: 75px;
+  left: 88px;
   transform: rotate(-9deg);
 }
 .detail {

@@ -7,15 +7,15 @@
         alt
         class="avatar"
       />
-      <div class="index">1/20</div>
+      <div class="index">{{index}}/20</div>
       <div class="ansMain" v-if="!showResult">
         <div class="amTitle">1、母校一贯的宗旨是什么？</div>
         <div class="opLisBoxt">
           <ul class="opList">
-            <li class="option" v-for="(item,index) in 6" @click="selOption(index)" :key="index">
+            <li class="option" v-for="(item,index) in list" @click="selOption(index)" :key="index">
               <span>自强不息，厚德载物</span>
-              <div class="right">
-                <img v-if="true" src="../../static/img/correct.png" alt class="resIcon" />
+              <div class="right" v-if="sel.includes(index)">
+                <img v-if="item.isTrue" src="../../static/img/correct.png" alt class="resIcon" />
                 <img v-else src="../../static/img/error.png" alt class="resIcon" />
               </div>
             </li>
@@ -41,22 +41,30 @@
   </div>
 </template>
 <script>
+let startTime=0,endTime=0;
 export default {
   name: "Home",
   data() {
     return {
-      sel: [1, 2, 3],
-      index: 2,
+      sel: [],
+      index: 2,//第几题
       showTime: true,
       timer: null,
       time: 10,
-      list: 2,
+      list: [{isTrue:1},{isTrue:1},{isTrue:0}],
       showResult: false //展示答案
     };
   },
   mounted() {
     this.getList();
     this.countdown();
+    startTime=new Date().getTime();
+    // setTimeout(()=>{
+    //   endTime=new Date().getTime();
+    // },2000)
+    // setTimeout(()=>{
+    //     console.log((endTime-startTime)/1000)
+    // },2000)
   },
   beforeDestroy() {
     if (this.timer) {
@@ -85,6 +93,12 @@ export default {
     selOption(index) {
       console.log(index);
       this.showTime = false;
+      if(!this.sel.includes(index)){
+          this.sel.push(index)
+          if(true){//单选
+              //next
+          }
+      }
     }
   }
 };
