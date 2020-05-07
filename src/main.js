@@ -6,8 +6,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import "amfe-flexible/index.js"
 import { vueBaberrage} from 'vue-baberrage'
-import {Button,Field,Toast,Dialog } from 'vant';
-[vueBaberrage,Button,Field,Toast,Dialog].forEach(e => {
+import {Button,Field,Toast,Dialog,Overlay} from 'vant';
+[vueBaberrage,Button,Field,Toast,Dialog,Overlay].forEach(e => {
   Vue.use(e)
 });
 Vue.use(VueAxios,axios);
@@ -50,22 +50,18 @@ var u = navigator.userAgent;
             }
         })
     }
-// axios.defaults.baseURL = '/api';
-// axios.interceptors.response.use(function(response){
-//   let res = response.data;
-//   if(res.status == 0){
-//     return res.data;
-//   }else if(res.status == 10){
-//     return Promise.reject(res);
-//   }else{
-//     Message.warning(res.msg);
-//     return Promise.reject(res);
-//   }
-// },(error)=>{
-//   let res = error.response;
-//   this.$toast.fail('失败文案');
-//   return Promise.reject(error);
-// });
+axios.defaults.baseURL = 'http://192.168.0.109:9001/school-service';
+axios.interceptors.response.use(function(response){
+  let res = response.data;
+  if(res.code ===10200){
+    return res.data;
+  }else{
+    return Promise.reject(res.data);
+  }
+},(error)=>{
+  let res = error.response;
+  return Promise.reject(error);
+});
 
 new Vue({
   router,

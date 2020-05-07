@@ -16,6 +16,16 @@ const routes = [
     path: '/blessing',
     name: 'blessing',
     component: () => import(/* webpackChunkName: "home" */ '../views/blessing.vue')
+  },
+  {
+    path: '/answer',
+    name: 'answer',
+    component: () => import(/* webpackChunkName: "home" */ '../views/answer.vue')
+  },
+  {
+    path: '/break',
+    name: 'break',
+    component: () => import(/* webpackChunkName: "home" */ '../views/break.vue')
   }
 ]
 
