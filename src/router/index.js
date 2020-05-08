@@ -10,22 +10,34 @@ const routes = [
   {
     path: '/index',
     name: 'index',
-    component: () => import(/* webpackChunkName: "home" */ '../views/index.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/index.vue'),
+      meta: {
+        title: '云祝福'
+    }
   },
   {
     path: '/blessing',
     name: 'blessing',
-    component: () => import(/* webpackChunkName: "home" */ '../views/blessing.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/blessing.vue'),
+    meta: {
+      title: '云祝福'
+    }
   },
   {
     path: '/answer',
     name: 'answer',
-    component: () => import(/* webpackChunkName: "home" */ '../views/answer.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/answer.vue'),
+    meta: {
+      title: '云祝福'
+    }
   },
   {
     path: '/break',
     name: 'break',
-    component: () => import(/* webpackChunkName: "home" */ '../views/break.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/break.vue'),
+    meta: {
+      title: '云祝福'
+    }
   }
 ]
 

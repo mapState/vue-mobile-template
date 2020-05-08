@@ -5,12 +5,14 @@ import FastClick from 'fastclick';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import "amfe-flexible/index.js"
+import VueCookie from 'vue-cookie' 
 import { vueBaberrage} from 'vue-baberrage'
 import {Button,Field,Toast,Dialog,Overlay} from 'vant';
 [vueBaberrage,Button,Field,Toast,Dialog,Overlay].forEach(e => {
   Vue.use(e)
 });
 Vue.use(VueAxios,axios);
+Vue.use(VueCookie)
 Vue.config.productionTip = false
 FastClick.prototype.focus = function (targetElement) {
   var length;
@@ -50,7 +52,7 @@ var u = navigator.userAgent;
             }
         })
     }
-axios.defaults.baseURL = 'http://192.168.0.109:9001/school-service';
+axios.defaults.baseURL = 'http://zuitiankeji.com:9001/school-service';
 axios.interceptors.response.use(function(response){
   let res = response.data;
   if(res.code ===10200){
@@ -63,6 +65,10 @@ axios.interceptors.response.use(function(response){
   return Promise.reject(error);
 });
 
+router.beforeEach((to, from, next) => {
+  window.document.title = to.meta.title == undefined?'南工院建校102周年校庆':to.meta.title+'-南工院建校102周年校庆'
+  next();
+})
 new Vue({
   router,
   render: h => h(App)

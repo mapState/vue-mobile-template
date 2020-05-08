@@ -15,12 +15,28 @@
 export default {
   name: "Home",
   data() {
-    return {};
+    return {
+      
+    };
   },
-  mounted() {},
+  mounted() {
+    // this.getUserInfo()
+  },
   methods: {
     goBlessing() {
       this.$router.push({ path: "/blessing" });
+    },
+     getUserInfo() {
+      this.axios
+        .get("/api/getUserInfo",{
+          params:{
+            token:this.$cookie.get('token')
+          }
+        })
+        .then(res => {
+          localStorage.setItem('index',JSON.stringify(res))
+          console.log(res);
+        });
     }
   }
 };

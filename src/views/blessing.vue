@@ -63,7 +63,7 @@ export default {
       console.log(data);
     },
     sendDm() {
-      this.showDia = true;
+      // this.showDia = true;
     },
     goAnswer() {
       this.$router.push({ path: "/answer" });
@@ -157,6 +157,10 @@ export default {
   background-size: 100% 100%;
   text-align: center;
   line-height: 48px;
+  font-size:16px;
+  font-family:PingFang SC;
+  font-weight:bold;
+  color:rgba(255,255,255,1);
 }
 .mask {
   width: 100%;
