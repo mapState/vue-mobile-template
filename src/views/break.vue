@@ -3,7 +3,7 @@
     <div class="answerBox">
       <span class="tag">{{list[index]&&list[index].isMultiple?'多选':'单选'}}</span>
       <img src="../../static/img/dtlogo.png" alt class="avatar" />
-      <div class="index">{{index+1}}/20</div>
+      <div class="index">{{index+1}}/10</div>
       <div class="ansMain" v-if="!showResult">
         <div class="amTitle">{{list[index]&&list[index].name}}</div>
         <div class="opLisBoxt">
@@ -12,7 +12,7 @@
               class="option"
               :class="sel.includes(item.id)?'active':''"
               v-for="item in list[index].list"
-              @click="selOption(item.id,list[index].isMultiple,item.isTrue)"
+              @click="selOption(item.id,item.isTrue)"
               :key="item.id"
             >
               <span>{{item.name}}</span>
@@ -35,8 +35,8 @@
         <span class="detail">共用时{{totals}}秒</span>
       </div>
       <div v-if="!showResult" class="bottomBox">
-        <div class="lookBtn" v-if="showLookBtn" @click="viewScore">查看成绩</div>
         <div class="time" v-show="showTime">{{time}}s</div>
+        <div class="lookBtn" v-if="showLookBtn" @click="viewScore">查看成绩</div>
         <div class="next" v-show="showNext&&index!=9" @click="next">下一题</div>
       </div>
     </div>
@@ -108,8 +108,8 @@ export default {
         console.log(this.form)
     },
     viewScore() {
-      this.showResult = true;
       this.show = true;
+      this.showResult = true;
     },
     countdown() {
       this.timer = setInterval(() => {
@@ -175,12 +175,15 @@ export default {
         this.showNext = false;
       }
     },
-    selOption(id, isMultiple, isTrue) {
+    selOption(id, isTrue) {
+      let isMultiple = this.list[this.index].isMultiple
       console.log(this.score);
       if (!this.showTime) {
         this.showNext = true;
-        this.showTime = false;
         return;
+      }
+      if(!isMultiple){
+          this.showTime=false
       }
       if (!this.sel.includes(id)) {
         if (this.sel.length <= 0) {
@@ -193,7 +196,6 @@ export default {
       }
       if (this.index === 9) {
         //最后一题
-        //this.showTime=false
         let arr1 = [];
         this.list[this.index].list.forEach(item => {
           item.isTrue && arr1.push(item.id);
@@ -223,7 +225,7 @@ export default {
   position: relative;
   background: url("../../static/img/aswerBg.png");
   background-size: cover;
-  width: 368px;
+  width: 375px;
   height: 460px;
   margin: 66px auto;
   border-radius: 8px;
@@ -260,7 +262,8 @@ export default {
   font-family: PingFang SC;
   font-weight: 400;
   color: rgba(147, 134, 117, 1);
-  margin-top: 12px;
+  margin-top: 14px;
+  transform: translateX(7px);
 }
 .ansMain {
   width: 257px;
@@ -331,8 +334,6 @@ export default {
   );
   border-radius: 20px;
   text-align: center;
-  position: absolute;
-  bottom: 64px;
 }
 .time {
   width: 112px;
@@ -345,8 +346,6 @@ export default {
   color: rgba(0, 0, 0, 1);
   text-align: center;
   line-height: 40px;
-  position: absolute;
-  bottom: 64px;
 }
 .next {
   width: 112px;
@@ -359,8 +358,6 @@ export default {
   color: rgba(0, 0, 0, 1);
   text-align: center;
   line-height: 40px;
-  position: absolute;
-  bottom: 64px;
 }
 .result {
   display: flex;
@@ -408,6 +405,8 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  position: absolute;
+  bottom: 60px;
 }
 .wrapper {
   display: flex;
