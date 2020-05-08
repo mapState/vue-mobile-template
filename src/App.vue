@@ -14,26 +14,10 @@ export default {
     // let APPID='wx6a444e7fcb0fbf4996ed863c8bd0214593c379610b7ffc2a'
     // let url='https%3a%2f%2fzuitiankeji.com%2findex'
     // this.$cookie.get("token") === null
-    // if (this.$cookie.get("token") === null) {
-    //   window.location.href =
-    //     `http://zuitiankeji.com:9001/school-service/api/auth?type=1&url=` +
-    //     window.encodeURIComponent(location.href);
-    // }else{
-    //     this.getUserInfo()
-    // }
-  },
-  methods: {
-    getUserInfo() {
-      this.axios
-        .get("/api/getUserInfo",{
-          params:{
-            token:this.$cookie.get('token')
-          }
-        })
-        .then(res => {
-          localStorage.setItem('app',JSON.stringify(res))
-          console.log(res);
-        });
+    if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com:9001/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
     }
   }
 };

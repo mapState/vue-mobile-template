@@ -53,6 +53,19 @@ var u = navigator.userAgent;
         })
     }
 axios.defaults.baseURL = 'http://zuitiankeji.com:9001/school-service';
+axios.interceptors.request.use(
+  config => {
+    if(this.$cookie.get('token')){
+      config.headers['token'] = this.$cookie.get('token')
+    }
+    return config
+  },
+  error => {
+    // do something with request error
+    console.log(error) // for debug
+    return Promise.reject(error)
+  }
+)
 axios.interceptors.response.use(function(response){
   let res = response.data;
   if(res.code ===10200){

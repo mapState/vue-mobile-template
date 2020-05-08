@@ -20,7 +20,7 @@ export default {
     };
   },
   mounted() {
-    // this.getUserInfo()
+    this.getUserInfo()
   },
   methods: {
     goBlessing() {
@@ -28,11 +28,7 @@ export default {
     },
      getUserInfo() {
       this.axios
-        .get("/api/getUserInfo",{
-          params:{
-            token:this.$cookie.get('token')
-          }
-        })
+        .get("/api/getUserInfo")
         .then(res => {
           localStorage.setItem('index',JSON.stringify(res))
           console.log(res);
