@@ -8,10 +8,10 @@
       </div>
     </div>
     <div class="bgBox">
-      <div class="title">答题闯关</div>
-      <p class="detail">世纪风华，德业日新。 职教引领，卓哉吾校。 济济群贤，相约云端。</p>
+      <!-- <div class="title">答题闯关</div> -->
+      <!-- <p class="detail">世纪风华，德业日新 职教引领，卓哉吾校 济济群贤，相约云端</p> -->
       <span class="count">共有{{count}}次闯关</span>
-      <img src="../../static/img/button.png" alt class="btn" @click="goBreak" />
+      <img src="../../static/img/misson complete.png" alt class="btn" @click="goBreak" />
     </div>
     <p class="rule">闯关成绩前500位，将会有精美小礼物奖励，成绩由答题计算得分，答题得分答错不得分成绩相同，时间越短越排前</p>
   </div>
@@ -96,11 +96,12 @@ export default {
 }
 .bgBox {
   position: relative;
-  background: url("../../static/img/bga1.png");
+  background: url("../../static/img/one.png");
   background-size: 100% 100%;
-  width: 343px;
-  height: 393px;
+  width: 295px;
+  height: 384px;
   margin: 26px auto;
+  transform: rotate(-9deg);
 }
 .title {
   font-size: 23px;
@@ -110,13 +111,13 @@ export default {
   position: absolute;
   top: 34px;
   left: 88px;
-  transform: rotate(-9deg);
+  /* transform: rotate(-9deg); */
 }
 .detail {
   position: absolute;
   top: 102px;
   left: 50%;
-  transform: rotate(-9deg) translateX(-50%);
+  transform: translateX(-50%);
   width: 187px;
   height: 105px;
   font-size: 18px;
@@ -129,7 +130,7 @@ export default {
   position: absolute;
   bottom: 112px;
   left: 50%;
-  transform: rotate(-9deg) translateX(-50%);
+  transform: translateX(-50%);
   font-size: 14px;
   font-family: PingFang SC;
   font-weight: bold;
