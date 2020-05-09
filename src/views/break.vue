@@ -97,13 +97,13 @@ export default {
   },
   mounted() {
     console.log(this.$cookie.get("token"));
-    //  if (this.$cookie.get("token") === null) {
-    //   window.location.href =
-    //     `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
-    //     window.encodeURIComponent(location.href);
-    // }else{
-    //   //this.getUserInfo()
-    // }
+     if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
+    }else{
+      //this.getUserInfo()
+    }
     this.getList();
     this.countdown();
     startTime = new Date().getTime();
