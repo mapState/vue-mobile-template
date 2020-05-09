@@ -10,7 +10,7 @@
     <div class="bgBox">
       <div class="title">答题闯关</div>
       <p class="detail">世纪风华，德业日新。 职教引领，卓哉吾校。 济济群贤，相约云端。</p>
-      <span class="count">共有20222次闯关</span>
+      <span class="count">共有{{count}}次闯关</span>
       <img src="../../static/img/button.png" alt class="btn" @click="goBreak" />
     </div>
     <p class="rule">闯关成绩前500位，将会有精美小礼物奖励，成绩由答题计算得分，答题得分答错不得分成绩相同，时间越短越排前</p>
@@ -20,16 +20,39 @@
 export default {
   name: "Home",
   data() {
-    return {};
+    return {
+      count:999
+    };
   },
-  mounted() {},
+  mounted() {
+    this.getNum()
+     if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
+    }else{
+        this.getUserInfo()
+    }
+  },
   methods: {
+    getNum(){
+        this.axios.get("/question/getAnswerCount").then(res => {
+        this.count=res.data
+      });
+    },
     goBlessing() {
       this.$router.push({ path: "/answer" });
     },
     goBreak() {
       this.$router.push({ path: "/break" });
-    }
+    },
+    getUserInfo() {
+      this.axios.get("/api/getUserInfo").then(res => {
+        //this.$toast(data.userName)
+        localStorage.setItem("user", JSON.stringify(res.data));
+        console.log(res);
+      });
+    },
   }
 };
 </script>

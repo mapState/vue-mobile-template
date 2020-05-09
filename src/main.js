@@ -52,11 +52,12 @@ var u = navigator.userAgent;
             }
         })
     }
-axios.defaults.baseURL = 'http://zuitiankeji.com:9001/school-service';
+    let cookies =VueCookie.get('token')
+axios.defaults.baseURL = 'https://zuitiankeji.com/school-service';
 axios.interceptors.request.use(
   config => {
-    if(this.$cookie.get('token')){
-      config.headers['token'] = this.$cookie.get('token')
+    if(cookies){
+      config.headers['token'] = cookies
     }
     return config
   },
@@ -69,9 +70,10 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(function(response){
   let res = response.data;
   if(res.code ===10200){
-    return res.data;
+    return res;
   }else{
-    return Promise.reject(res.data);
+    this.$toast.fail(res.message||res.code)
+    return Promise.reject(res);
   }
 },(error)=>{
   let res = error.response;

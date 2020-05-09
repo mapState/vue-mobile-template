@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <div class="answerBox">
+      <!-- <img src="../../static/img/back.png" alt="" class="bgimg"> -->
       <span class="tag">{{list[index]&&list[index].isMultiple?'多选':'单选'}}</span>
       <img src="../../static/img/dtlogo.png" alt class="avatar" />
       <div class="index">{{index+1}}/10</div>
@@ -34,16 +35,22 @@
         <span class="detail">共答对{{score/10}}道</span>
         <span class="detail">共用时{{totals}}秒</span>
       </div>
+       <div class="timeout" v-show="!clicked&&timeEnd&&showNext&&index!=9">时间到 未答题</div>
       <div v-if="!showResult" class="bottomBox">
-        <div class="time" v-show="showTime">{{time}}s</div>
-        <div class="lookBtn" v-if="showLookBtn" @click="viewScore">查看成绩</div>
-        <div class="next" v-show="showNext&&index!=9" @click="next">下一题</div>
+        <div class="time zbtn" v-show="showTime">{{time}}s</div>
+        <div class="next looka zbtn" v-if="showLookBtn" @click="viewScore">查看成绩</div>
+        <div class="next zbtn xyt" v-show="showNext&&index!=9" @click="next">下一题
+        </div>
       </div>
     </div>
     <van-overlay :show="show" @click="show = false">
       <div class="wrapper">
         <div class="block" @click.stop>
           <img src="../../static/img/top.png" alt class="btop" />
+          <div class="topText">
+            <span class="topText1">填写信息</span>
+            <span class="topText2">有机会获得礼物一份</span>
+          </div>
           <van-field v-model="form.name" placeholder="姓名" />
           <van-field v-model="form.phone" placeholder="手机号" />
           <van-field v-model="form.email" placeholder="邮箱(选填)" />
@@ -83,19 +90,23 @@ export default {
         phone: "",
         email: "",
         address: ""
-      }
+      },
+      timeEnd:false,
+      clicked:false
     };
   },
   mounted() {
+    console.log(this.$cookie.get("token"));
+     if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
+    }else{
+      //this.getUserInfo()
+    }
     this.getList();
     this.countdown();
     startTime = new Date().getTime();
-    // setTimeout(()=>{
-    //   endTime=new Date().getTime();
-    // },2000)
-    // setTimeout(()=>{
-    //     console.log((endTime-startTime)/1000)
-    // },2000)
   },
   beforeDestroy() {
     if (this.timer) {
@@ -103,11 +114,44 @@ export default {
     }
   },
   methods: {
-    submit(){
-      this.show=false
-        console.log(this.form)
+    getUserInfo() {
+      this.axios.get("/api/getUserInfo").then(res => {
+        //this.$toast(data.userName)
+        localStorage.setItem("user", JSON.stringify(res.data));
+        console.log(res);
+      });
+    },
+    submit() {
+      console.log(this.form);
+      if (this.form.name == "" || this.form.phone == "") {
+        this.$toast.fail("姓名、手机号不能为空");
+      } else {
+        this.axios
+          .post("/api/saveUser", {
+            receivaPhone: this.form.phone,
+            receivaName: this.form.name,
+            receivaEmail: this.form.email,
+            receivaAddress: this.form.address
+          })
+          .then(res => {
+            this.show = false;
+            console.log(res);
+            this.$toast.success(res.message);
+          });
+      }
+    },
+    saveScore() {
+      this.axios
+        .post("/userAnswer/saveAnswer", {
+          score: this.score,
+          time:this.totals
+        })
+        .then(res => {
+          console.log(res);
+        });
     },
     viewScore() {
+      this.saveScore();
       this.show = true;
       this.showResult = true;
     },
@@ -115,6 +159,7 @@ export default {
       this.timer = setInterval(() => {
         --this.time;
         if (this.time <= 0) {
+          this.timeEnd=true
           //时间到 下一题
           this.showTime = false;
           this.time = 10;
@@ -129,7 +174,7 @@ export default {
     getList() {
       this.axios.get("/question/list").then(res => {
         //console.log(res);
-        let gkList = [...res];
+        let gkList = [...res.data];
         gkList.forEach(e => {
           var count = 0;
           e.list.forEach(item => {
@@ -144,7 +189,7 @@ export default {
           }
         });
         console.log(gkList);
-        this.list = res;
+        this.list = res.data;
       });
     },
     //判断对错 得分
@@ -153,6 +198,7 @@ export default {
     },
     next() {
       if (this.index < 9) {
+        this.clicked=false
         // var str=''
         // if(this.sel.length>0){
         //     str=this.sel.join(',')
@@ -176,7 +222,8 @@ export default {
       }
     },
     selOption(id, isTrue) {
-      let isMultiple = this.list[this.index].isMultiple
+      this.clicked=true
+      let isMultiple = this.list[this.index].isMultiple;
       console.log(this.score);
       if (!this.showTime) {
         this.showNext = true;
@@ -185,6 +232,7 @@ export default {
       if(!isMultiple){
           this.showTime=false
       }
+      //this.showTime = false;
       if (!this.sel.includes(id)) {
         if (this.sel.length <= 0) {
           this.sel.push(id);
@@ -193,6 +241,8 @@ export default {
             this.sel.push(id);
           }
         }
+      }else{
+        return
       }
       if (this.index === 9) {
         //最后一题
@@ -200,9 +250,11 @@ export default {
         this.list[this.index].list.forEach(item => {
           item.isTrue && arr1.push(item.id);
         });
+
         if (this.isArr(arr1, this.sel)) {
           this.score += 10;
         }
+
         endTime = new Date().getTime();
         this.totals = (endTime - startTime) / 1000;
         this.showLookBtn = true;
@@ -220,22 +272,25 @@ export default {
   height: 100%;
   position: fixed;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .answerBox {
   position: relative;
-  background: url("../../static/img/aswerBg.png");
-  background-size: cover;
+  background: url("../../static/img/back.png");
+  background-size:100% 100%;
   width: 375px;
-  height: 460px;
-  margin: 66px auto;
+  height: 490px;
+  margin-top:66px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .tag {
-  width: 31px;
-  height: 17px;
+  width: 34px;
+  height: 18px;
   line-height: 17px;
   background: rgba(255, 221, 217, 1);
   border-radius: 0px 5px 0px 5px;
@@ -244,9 +299,9 @@ export default {
   font-weight: 400;
   color: rgba(255, 37, 14, 1);
   position: absolute;
-  top: 14px;
-  right: 15px;
-  text-align: right;
+  right:13px;
+  top:12.5px;
+  text-align: center;
 }
 .avatar {
   width: 50px;
@@ -332,6 +387,7 @@ export default {
     rgba(255, 217, 67, 1),
     rgba(255, 185, 11, 1)
   );
+  box-shadow: 0 3px 2px #ffb90b;
   border-radius: 20px;
   text-align: center;
 }
@@ -358,6 +414,15 @@ export default {
   color: rgba(0, 0, 0, 1);
   text-align: center;
   line-height: 40px;
+  position: relative;
+}
+.timeout{
+  position:absolute;
+  bottom:124px;
+  left:50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: rgba(255, 37, 14, 1);
 }
 .result {
   display: flex;
@@ -419,6 +484,7 @@ export default {
   width: 305px;
   height: 395px;
   background-color: #fff;
+  position: relative;
 }
 .btop {
   width: 305px;
@@ -429,7 +495,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top:35px;
+  margin-top: 35px;
 }
 .drap {
   text-align: center;
@@ -460,5 +526,52 @@ export default {
   font-weight: 500;
   color: rgba(125, 73, 9, 1);
 }
+.topText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 305px;
+  height: 101px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.topText1 {
+  font-size: 22px;
+  font-family: PingFang SC;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 1);
+  margin-bottom: 10px;
+}
+.topText2 {
+  font-size: 14px;
+  font-family: PingFang SC;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+}
+.looka {
+  font-size: 16px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  color: rgba(125, 73, 9, 1);
+}
+.zbtn{
+  transform: translateY(-14px);
+}
+.bgimg{
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  z-index: -1;
+  }
+  .looka{
+    margin-left:10px;
+  }
+  .xyt{
+    margin-left:10px;
+  }
 </style>>
 

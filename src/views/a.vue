@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-   
+    <img src="../../static/img/aswerBg.png" alt="" class="img">
   </div>
 </template>
 <script>
@@ -18,11 +18,11 @@ export default {
 </script>
 <style scoped>
 .main {
-  background: url('../../static/img/bg.png');
-  background-size: 100% 100%;
-  height: 100%;
-  position: fixed;
-  width: 100%;
+ background-color: #000;
+}
+.img{
+  width:345px;
+  height: 470px;
 }
 
 </style>>

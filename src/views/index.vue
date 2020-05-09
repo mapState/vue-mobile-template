@@ -20,20 +20,25 @@ export default {
     };
   },
   mounted() {
-    this.getUserInfo()
+    if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
+    }else{
+        this.getUserInfo()
+    }
   },
   methods: {
     goBlessing() {
-      this.$router.push({ path: "/blessing" });
+      this.$router.push({ path: "/blessing"});
     },
-     getUserInfo() {
-      this.axios
-        .get("/api/getUserInfo")
-        .then(res => {
-          localStorage.setItem('index',JSON.stringify(res))
-          console.log(res);
-        });
-    }
+    getUserInfo() {
+      this.axios.get("/api/getUserInfo").then(data => {
+          this.$toast(data.userName)
+          localStorage.setItem('indexr',JSON.stringify(data))
+          console.log(data);
+      });
+    },
   }
 };
 </script>

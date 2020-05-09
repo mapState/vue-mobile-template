@@ -1,5 +1,5 @@
 module.exports = {
-    lintOnSave: false
+    lintOnSave: false,
     // devServer:{
     //     host:'zuitiankeji.com',
     //     port:80,
