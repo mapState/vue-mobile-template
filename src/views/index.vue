@@ -4,10 +4,10 @@
       <img src="../../static/img/logo.png" alt class="logo" />
       <div class="headerRight">
         <div class="hr1">南京工业职业技术学院(本科)</div>
-        <div class="hr2">102周年校庆</div>
+        <div class="hr2">1918-2020建校102周年</div>
       </div>
     </div>
-    <span class="total">共有201010次祝福</span>
+    <span class="total">共有{{count}}次祝福</span>
     <div @click="goBlessing" class="btn">参与祝福</div>
   </div>
 </template>
@@ -16,17 +16,17 @@ export default {
   name: "Home",
   data() {
     return {
-      
+        count:0
     };
   },
   mounted() {
-    if (this.$cookie.get("token") === null) {
-      window.location.href =
-        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
-        window.encodeURIComponent(location.href);
-    }else{
-        this.getUserInfo()
-    }
+    // if (this.$cookie.get("token") === null) {
+    //   window.location.href =
+    //     `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+    //     window.encodeURIComponent(location.href);
+    // }else{
+    //     this.getUserInfo()
+    // }
   },
   methods: {
     goBlessing() {
@@ -37,6 +37,12 @@ export default {
           this.$toast(data.userName)
           localStorage.setItem('indexr',JSON.stringify(data))
           console.log(data);
+      });
+    },
+    //获取祝福次数
+    getCount() {
+      this.axios.get("/api/getUserInfo").then(res => {
+        console.log(res);
       });
     },
   }

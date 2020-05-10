@@ -28,7 +28,7 @@ const routes = [
     name: 'answer',
     component: () => import(/* webpackChunkName: "home" */ '../views/answer.vue'),
     meta: {
-      title: '云游校园'
+      title: '云逛校园'
     }
   },
   {
@@ -36,8 +36,8 @@ const routes = [
     name: 'break',
     component: () => import(/* webpackChunkName: "home" */ '../views/break.vue'),
     meta: {
-      title: '云游校园'
-    }
+      title: '云逛校园'
+    },
   }
 ]
 

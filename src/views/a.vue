@@ -1,6 +1,9 @@
 <template>
   <div class="main">
-    <img src="../../static/img/aswerBg.png" alt="" class="img">
+    <div class="imgBox">
+      <img src="../../static/img/back.png" alt="" class="img">
+      <div class="dd">dd </div>
+    </div>
   </div>
 </template>
 <script>
@@ -18,11 +21,24 @@ export default {
 </script>
 <style scoped>
 .main {
- background-color: #000;
+ 
+}
+.imgBox{
+ width:306px;
+  height:459px;
+  position: relative;
 }
 .img{
-  width:345px;
-  height: 470px;
+  width:306px;
+  height:459px;
+  position: absolute;
+  left:0;
+  top:0;
+}
+.dd{
+  position: absolute;
+  right:0;
+  top:0;
 }
 
 </style>>
