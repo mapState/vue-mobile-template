@@ -309,10 +309,10 @@ export default {
   width: 50px;
   height: 50px;
   background: rgba(255, 255, 255, 1);
-  border: 4px solid #fff;
   box-sizing: border-box;
   border-radius: 50%;
-  margin-top: -12px;
+  margin-left:12px;
+  margin-top: -14px;
 }
 .index {
   font-size: 12px;
