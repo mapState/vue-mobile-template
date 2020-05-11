@@ -5,22 +5,23 @@
       <h4 class="title">南京工业职业技术学院(本科)</h4>
       <span class="total">共{{total}}次祝福</span>
     </div>
-    <div class="stage">
-      <vue-baberrage :isShow="barrageIsShow" :barrageList="barrageList"  :lanesCount="5"  :maxWordCount = "60"
-                  :loop="barrageLoop" :boxHeight="421">
+     <vue-baberrage
+      :isShow= "barrageIsShow"
+      :barrageList = "barrageList"
+      :loop = "barrageLoop"
+      :boxHeight="421"
+      :lanesCount="12"
+      >
         <template v-slot:default="slotProps">
           <img :src="slotProps.item.userImage" alt class="avatar" />
-          <span class="dm" :class="{'red':slotProps.item.isMy}" @click="lookDm(slotProps.item)">{{slotProps.item.messageContent}}</span>
+          <span class="dm" :class="{'red':slotProps.item.isMy}" @click="lookDm(slotProps.item)">{{slotProps.item.msg}}</span>
         </template>
-      </vue-baberrage>
-    </div>
+    </vue-baberrage>
     <div class="footer">
       <div class="write" @click="sendDm">
         <img src="../../static/img/edit.png" alt class="editIcon" />
         <span>写祝福</span>
       </div>
-      <!-- <div class="fbtn">云合影</div>
-      <div class="fbtn" @click="goAnswer">答题闯关</div> -->
     </div>
     <div class="mask" v-show="showDia" @click="showDia=false"></div>
     <div class="dialog" v-show="showDia">
@@ -34,14 +35,6 @@
                   <option value="3">游客</option>
                 </select>
               </div>
-              <!-- <div class="selBox">
-                <select  v-model="form.time">
-                  <option value="" disabled selected hidden>入学/入职年份</option>
-                  <option value ="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
-                </select>
-              </div> -->
               <input type="text" v-model="form.joinYear" class="input" placeholder="请填写入学/入职年份">
               <input type="text" v-model="form.joinDepartment" class="input" placeholder="请填写院系/部门">
               <input type="text" v-model="form.userName" class="input" placeholder="请填写姓名">
@@ -52,22 +45,22 @@
                   送出祝福
               </div>
           </div>
-      </div>
-   <van-overlay :show="showDma" @click="showDma = false">
-      <div class="wrapper">
-        <div class="block">
-            <div class="detailTop">
-                <img :src="selDm.userImage" alt="">
-                <div class="dtopText">
-                    <span class="dtopText1">{{selDm.userName}}</span>
-                    <span class="dtopText2">{{selDm.createDate}}</span>
-                </div>
-            </div>
-            <p class="detailMiddle">{{selDm.messageContent}}</p>
-            <!-- <p class="detailBottom">{{selDm.user.type===0?'系统':(selDm.user.type===1?'学子':(selDm.user.type===2?'教工':'游客'))}} {{selDm.user.receiveName}} {{selDm.user.joinDepartment}} {{selDm.user.joinYear}}</p> -->
+    </div>
+    <van-overlay :show="showDma" @click="showDma = false">
+        <div class="wrapper">
+          <div class="block">
+              <div class="detailTop">
+                  <img :src="selDm.userImage" alt="">
+                  <div class="dtopText">
+                      <span class="dtopText1">{{selDm.userName}}</span>
+                      <span class="dtopText2">{{selDm.createDate}}</span>
+                  </div>
+              </div>
+              <p class="detailMiddle">{{selDm.messageContent}}</p>
+              <!-- <p class="detailBottom">{{selDm.user.type===0?'系统':(selDm.user.type===1?'学子':(selDm.user.type===2?'教工':'游客'))}} {{selDm.user.receiveName}} {{selDm.user.joinDepartment}} {{selDm.user.joinYear}}</p> -->
+          </div>
         </div>
-      </div>
-  </van-overlay>
+    </van-overlay>
   </div>
 </template>
 <script>
@@ -104,19 +97,23 @@ export default {
 
       },
       disableSend:false,
+      timer:null
     };
   },
   mounted() {
     //this.addToList()
     //this.getUserInfo()
-    // setInterval(()=>{
-    //   count++
-    //   if(count>=5){
-    //     console.log(this.barrageList)
-    //       return
-    //   }
-    //   this.getMessage()
-    // },2000)
+    this.timer=setInterval(()=>{
+      count++
+      if(count>=5){
+        console.log(this.barrageList)
+        clearInterval(this.timer)
+          return
+      }else{
+        this.getMessage()
+      }
+      this.getMessage()
+    },8000)
     //this.sengMessage()
     this.getMessage()
     // if (this.$cookie.get("token") === null) {
@@ -134,7 +131,7 @@ export default {
           id: ++this.currentId,
           userImage:
             "https://hbimg.huabanimg.com/43fae7ad563ed61814c76bbe1cc373e7ff61000e2cd1f-DC5YBB_fw658/format/webp",
-          messageContent: this.msg + i + "",
+          msg: this.msg + i + "22222",
           time: 8,
           type: MESSAGE_TYPE.NORMAL
         });
@@ -154,13 +151,13 @@ export default {
           let list=[...res.data]
           if(res.data.length>0){
               list.forEach((item,index) => {
+                  item.msg=item.messageContent
                   item.time=5
                   item.type=MESSAGE_TYPE.NORMAL
                   console.log(item)
               });
               this.barrageList.push(...list)
           }
-          // this.barrageList=this.barrageList.concat(res.data)
           this.total=res.count
           console.log(this.barrageList)
         });
@@ -185,6 +182,7 @@ export default {
       this.axios.post("/leaveMessage/saveMessage",this.form).then(res => {
           console.log(res.data)
           let dm={...res.data}
+          dm.msg=dm.messageContent
           dm.time=2
           dm.type=MESSAGE_TYPE.NORMAL
           dm.isMy=true

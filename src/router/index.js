@@ -38,6 +38,14 @@ const routes = [
     meta: {
       title: '云逛校园'
     },
+  },
+  {
+    path: '/a',
+    name: 'a',
+    component: () => import(/* webpackChunkName: "home" */ '../views/a.vue'),
+    meta: {
+      title: '云逛校园'
+    },
   }
 ]
 
