@@ -2,7 +2,7 @@
   <div class="main">
     <div class="answerBox">
       <!-- <img src="../../static/img/back.png" alt="" class="bgimg"> -->
-      <span class="tag">{{list[index]&&list[index].isMultiple?'多选':'单选'}}</span>
+      <span class="tag" v-if="showTag">{{list[index]&&list[index].isMultiple?'多选':'单选'}}</span>
       <img src="../../static/img/dtlogo.png" alt class="avatar" />
       <div class="index">{{index+1}}/10</div>
       <div class="ansMain" v-if="!showResult">
@@ -37,7 +37,7 @@
       </div>
        <div class="timeout" v-show="!clicked&&timeEnd&&showNext&&index!=9">时间到 未答题</div>
       <div v-if="!showResult" class="bottomBox">
-        <div class="time zbtn" v-show="showTime">{{time}}s</div>
+        <div class="time zbtn" v-show="showTime" v-html="time+'s'"></div>
         <div class="next looka zbtn" v-if="showLookBtn" @click="viewScore">查看成绩</div>
         <div class="next zbtn xyt" v-show="showNext&&index!=9" @click="next">下一题
         </div>
@@ -76,7 +76,7 @@ export default {
       showTime: true,
       showNext: false,
       timer: null,
-      time: 10,
+      time: 11,
       list: [],
       showResult: false, //展示答案
       isMultiple: true,
@@ -92,7 +92,9 @@ export default {
         address: ""
       },
       timeEnd:false,
-      clicked:false
+      clicked:false,
+      id:0,
+      showTag:true
     };
   },
   mounted() {
@@ -102,7 +104,7 @@ export default {
         `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
         window.encodeURIComponent(location.href);
     }else{
-      //this.getUserInfo()
+      this.getUserInfo()
     }
     this.getList();
     this.countdown();
@@ -117,8 +119,9 @@ export default {
     getUserInfo() {
       this.axios.get("/api/getUserInfo").then(res => {
         //this.$toast(data.userName)
-        localStorage.setItem("user", JSON.stringify(res.data));
-        console.log(res);
+        //localStorage.setItem("user", JSON.stringify(res.data));
+        this.id=res.data.id
+        console.log(this.id);
       });
     },
     submit() {
@@ -128,10 +131,11 @@ export default {
       } else {
         this.axios
           .post("/api/saveUser", {
-            receivaPhone: this.form.phone,
-            receivaName: this.form.name,
-            receivaEmail: this.form.email,
-            receivaAddress: this.form.address
+            receivePhone: this.form.phone,
+            receiveName: this.form.name,
+            receiveEmail: this.form.email,
+            receiveAddress: this.form.address,
+            id:this.id
           })
           .then(res => {
             this.show = false;
@@ -153,28 +157,46 @@ export default {
     viewScore() {
       this.saveScore();
       this.show = true;
+      this.showTag=false
       setTimeout(()=>{
         this.showResult = true;
       },1000)
     },
-    countdown() {
-      this.timer = setInterval(() => {
-        --this.time;
-        if (this.time <= 0) {
-          this.timeEnd=true
+    countdown(){
+      this.time--
+      if(this.time <= 0){
+         this.timeEnd=true
           //时间到 下一题
           this.showTime = false;
-          this.time = 10;
+          this.time = 11;
           clearInterval(this.timer);
           this.showNext = true;
-        }
-      }, 1000);
+         return
+      }
+      this.timer=setTimeout(this.countdown,1000);
     },
+    // countdown() {
+    //   this.timer = setInterval(() => {
+    //     --this.time;
+    //     if (this.time <= 0) {
+    //       this.timeEnd=true
+    //       //时间到 下一题
+    //       this.showTime = false;
+    //       this.time = 10;
+    //       clearInterval(this.timer);
+    //       this.showNext = true;
+    //     }
+    //   }, 1000);
+    // },
     goBlessing() {
       this.$router.push({ path: "/blessing" });
     },
     getList() {
-      this.axios.get("/question/list").then(res => {
+      this.axios.get("/question/list",{
+        params:{
+          isRandom:1
+        }
+      }).then(res => {
         //console.log(res);
         let gkList = [...res.data];
         gkList.forEach(e => {
@@ -216,7 +238,7 @@ export default {
         }
         this.sel = [];
         this.index++;
-        this.time = 10;
+        this.time = 11;
         this.showTime = true;
         clearInterval(this.timer);
         this.countdown();

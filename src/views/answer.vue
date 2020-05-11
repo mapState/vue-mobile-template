@@ -4,7 +4,7 @@
       <img src="../../static/img/logo.png" alt class="logo" />
       <div class="headerRight">
         <div class="hr1">南京工业职业技术学院(本科)</div>
-        <div class="hr2">102周年校庆</div>
+        <div class="hr2">建校102周年云校庆</div>
       </div>
     </div>
     <div class="bgBox">
@@ -13,7 +13,7 @@
       <span class="count">共有{{count}}次闯关</span>
       <img src="../../static/img/misson complete.png" alt class="btn" @click="goBreak" />
     </div>
-    <p class="rule">闯关成绩前500位，将会有精美小礼物奖励，成绩由答题计算得分，答题得分答错不得分成绩相同，时间越短越排前</p>
+    <img src="../../static/img/word.png" alt="" class="rule">
   </div>
 </template>
 <script>
@@ -21,7 +21,7 @@ export default {
   name: "Home",
   data() {
     return {
-      count:999
+      count:0
     };
   },
   mounted() {
@@ -145,15 +145,19 @@ export default {
   left: 50%;
   transform: translateX(-50%);
 }
+/* .rule{
+  width: 212px;
+  text-align-last: justify;
+    -moz-text-align-last: justify ;
+    text-align: justify;
+    text-justify: distribute-all-lines; 
+    display: block; 
+} */
 .rule {
-  width: 211px;
+  width: 212px;
   height:48px;
-  font-size: 12px;
-  font-family: PingFang SC;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 1);
-  line-height: 18px;
-  margin: 13px auto;
+  display: block;
+  margin: 14px auto;
 }
 </style>>
 
