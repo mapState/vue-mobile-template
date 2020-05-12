@@ -37,15 +37,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '../views/break.vue'),
     meta: {
       title: '云逛校园'
-    },
-  },
-  {
-    path: '/a',
-    name: 'a',
-    component: () => import(/* webpackChunkName: "home" */ '../views/a.vue'),
-    meta: {
-      title: '云逛校园'
-    },
+    }
   }
 ]
 

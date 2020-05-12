@@ -53,7 +53,7 @@ var u = navigator.userAgent;
         })
     }
     let cookies =VueCookie.get('token')
-    //let cookies='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbk5hbWUiOiJOYU4iLCJpZCI6NDAsImV4cCI6MTU4OTE3MDM3NX0.SVA_qPsA2J6tk52Fg-DdhLdpAQctOAdjaAuxEdn_YK0'
+    //let cookies='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbk5hbWUiOiJOYU4iLCJpZCI6NDAsImV4cCI6MTU4OTI0OTI0MX0._pxxmcd5VYIMSTQmVo79Dly9RXNc4IruP0W2T-NwguI'
 axios.defaults.baseURL = 'https://zuitiankeji.com/school-service';
 axios.interceptors.request.use(
   config => {

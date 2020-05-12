@@ -16,32 +16,33 @@ export default {
   name: "Home",
   data() {
     return {
-        count:0
+        count:''
     };
   },
   mounted() {
-    // if (this.$cookie.get("token") === null) {
-    //   window.location.href =
-    //     `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
-    //     window.encodeURIComponent(location.href);
-    // }else{
-    //     this.getUserInfo()
-    // }
+    this.getCount()
+    if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
+    }else{
+        this.getUserInfo()
+    }
   },
   methods: {
     goBlessing() {
       this.$router.push({ path: "/blessing"});
     },
     getUserInfo() {
-      this.axios.get("/api/getUserInfo").then(data => {
-          this.$toast(data.userName)
-          localStorage.setItem('indexr',JSON.stringify(data))
-          console.log(data);
+      this.axios.get("/api/getUserInfo").then(res => {
+          console.log(res);
+          //this.id=res.data.id
       });
     },
     //获取祝福次数
     getCount() {
-      this.axios.get("/api/getUserInfo").then(res => {
+      this.axios.get("/question/getMessageCount").then(res => {
+        this.count=res.data
         console.log(res);
       });
     },

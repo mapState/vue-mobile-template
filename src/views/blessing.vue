@@ -5,16 +5,16 @@
       <h4 class="title">南京工业职业技术学院(本科)</h4>
       <span class="total">共{{total}}次祝福</span>
     </div>
-     <vue-baberrage
+     <vue-baberrage 
       :isShow= "barrageIsShow"
       :barrageList = "barrageList"
       :loop = "barrageLoop"
       :boxHeight="421"
-      :lanesCount="12"
+      :lanesCount="10"
       >
         <template v-slot:default="slotProps">
           <img :src="slotProps.item.userImage" alt class="avatar" />
-          <span class="dm" :class="{'red':slotProps.item.isMy}" @click="lookDm(slotProps.item)">{{slotProps.item.msg}}</span>
+          <span class="dm" :class="{'red':slotProps.item.isMy}" @click="lookDm(slotProps.item.id)">{{slotProps.item.msg}}</span>
         </template>
     </vue-baberrage>
     <div class="footer">
@@ -38,7 +38,7 @@
               <input type="text" v-model="form.joinYear" class="input" placeholder="请填写入学/入职年份">
               <input type="text" v-model="form.joinDepartment" class="input" placeholder="请填写院系/部门">
               <input type="text" v-model="form.userName" class="input" placeholder="请填写姓名">
-              <textarea  class="textarea" placeholder="请填写您的祝福语" v-model="form.messageContent"  maxlength="30">    
+              <textarea  class="textarea" placeholder="请填写您的祝福语" v-model="form.messageContent"  maxlength="50">    
               </textarea>
               <!-- maxlength="50" -->
               <div class="sendBtn" @click="sengMessage">
@@ -57,7 +57,7 @@
                   </div>
               </div>
               <p class="detailMiddle">{{selDm.messageContent}}</p>
-              <!-- <p class="detailBottom">{{selDm.user.type===0?'系统':(selDm.user.type===1?'学子':(selDm.user.type===2?'教工':'游客'))}} {{selDm.user.receiveName}} {{selDm.user.joinDepartment}} {{selDm.user.joinYear}}</p> -->
+              <p class="detailBottom">{{selDm.type===0?'系统':(selDm.type===1?'学子':(selDm.type===2?'教工':'游客'))}} {{selDm.user.receiveName}} {{selDm.user.joinDepartment}} {{selDm.user.joinYear}}</p>
           </div>
         </div>
     </van-overlay>
@@ -78,7 +78,8 @@ export default {
       barrageIsShow: true,
       currentId: 0,
       barrageLoop: false,
-      barrageList: [{}],
+      barrageList: [],
+      list:[],
       showDia: false,
       showDma:false,
       form:{
@@ -88,43 +89,41 @@ export default {
         userName:'',
         messageContent:'',
         messageType:1,
-        id:40
+        id:''
       },
       pageNo:1,
-      pageSize:20,
-      total:0,
+      pageSize:10,
+      total:'',
       selDm:{
-
+        type:3,
+        user:{
+          receiveName:'',
+          joinDepartment:'',
+          joinDepartment:'',
+          joinYear:''
+        }
       },
       disableSend:false,
-      timer:null
+      timer:null,
     };
   },
   mounted() {
-    //this.addToList()
+    this.getCount()
     //this.getUserInfo()
-    this.timer=setInterval(()=>{
-      count++
-      if(count>=5){
-        console.log(this.barrageList)
-        clearInterval(this.timer)
-          return
-      }else{
-        this.getMessage()
-      }
-      this.getMessage()
-    },8000)
-    //this.sengMessage()
-    this.getMessage()
-    // if (this.$cookie.get("token") === null) {
-    //   window.location.href =
-    //     `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
-    //     window.encodeURIComponent(location.href);
-    // }else{
-    //     this.getUserInfo()
-    // }
+    this.getListByTime()
+    if (this.$cookie.get("token") === null) {
+      window.location.href =
+        `http://zuitiankeji.com/school-service/api/auth?type=1&url=` +
+        window.encodeURIComponent(location.href);
+    }else{
+      this.getUserInfo()
+    }
   },
   methods: {
+    getListByTime(){
+        this.getMessage()
+        this.timer=setTimeout(this.getListByTime,3000)
+    },
     addToList() {
       for (let i = 0; i <= 10; i++) {
         this.barrageList.push({
@@ -132,7 +131,7 @@ export default {
           userImage:
             "https://hbimg.huabanimg.com/43fae7ad563ed61814c76bbe1cc373e7ff61000e2cd1f-DC5YBB_fw658/format/webp",
           msg: this.msg + i + "22222",
-          time: 8,
+          time: 5,
           type: MESSAGE_TYPE.NORMAL
         });
       }
@@ -152,13 +151,18 @@ export default {
           if(res.data.length>0){
               list.forEach((item,index) => {
                   item.msg=item.messageContent
-                  item.time=5
+                  item.time=2
                   item.type=MESSAGE_TYPE.NORMAL
                   console.log(item)
+                  this.list.push(item)
+                  this.barrageList.push(item)
               });
-              this.barrageList.push(...list)
+              this.pageNo++
+              // this.barrageList.push(...list)
+              console.log(this.barrageList)
+          }else{
+            clearTimeout(this.timer)
           }
-          this.total=res.count
           console.log(this.barrageList)
         });
     },
@@ -170,11 +174,16 @@ export default {
           }
         }).then(res => {
           console.log(res)
+           this.selDm=res.data[0]
+          this.showDma=true
         });
     },
     //发送祝福
     sengMessage(){
-      if(false){
+      console.log(this.form)
+      let {messageContent,joinDepartment,joinYear,type}=this.form
+      if(messageContent===''){
+        this.$toast('请认真填写祝福')
           return
       }
       this.disableSend=true
@@ -187,6 +196,7 @@ export default {
           dm.type=MESSAGE_TYPE.NORMAL
           dm.isMy=true
           this.barrageList.push(dm)
+          this.total++
           this.$toast.success(res.message)
           this.showDia=false
           this.disableSend=false
@@ -194,13 +204,8 @@ export default {
           this.disableSend=false
       });
     },
-    lookDm(data) {
-       if(!data.user.type){
-          data.user.type=4
-      }
-      console.log(data);
-      this.selDm=data
-      this.showDma=true
+    lookDm(id) {
+      this.getMessageById(id)
     },
     sendDm() {
       this.showDia = true;
@@ -212,8 +217,14 @@ export default {
      getUserInfo() {
       this.axios.get("/api/getUserInfo").then(res => {
         //this.$toast(data.userName)
-        this.from.id=res.data.id
+        this.form.id=res.data.id
         console.log(res.data);
+      });
+    },
+    getCount() {
+      this.axios.get("/question/getMessageCount").then(res => {
+        this.total=res.data
+        console.log(res);
       });
     },
   }
@@ -447,6 +458,9 @@ input::-webkit-input-placeholder{
   .detailMiddle{
     width:238px;
     min-height: 39px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
     margin: 38px auto;
     margin-bottom:0;
     font-size:14px;
@@ -464,7 +478,7 @@ input::-webkit-input-placeholder{
     margin-top:24px;
   }
   .red{
-    color: #f60 !important;
+    color: rgba(255, 150, 17, 1) !important;
   }
   .stage{
      width: 100%;
