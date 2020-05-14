@@ -17,7 +17,7 @@
       :loop = "barrageLoop"
       :boxHeight="420"
       :lanesCount="10"
-      :throttleGap="6000"
+      :throttleGap="5000"
       >
         <template v-slot:default="slotProps">
           <div class="dmBoxContent">
@@ -35,18 +35,19 @@
     <div class="mask" v-show="showDia" @click="showDia=false"></div>
     <div class="dialog" v-show="showDia">
           <div class="diaMain">
-              <div class="selBox">
+              <!-- <div class="selBox">
                 <select v-model="form.type">
-                  <option value="" disabled selected hidden>请选择身份</option>
+                  <option value="" disabled selected hidden>请选择身份(选填)</option>
+                  <option value="">请选择身份(选填)</option>
                   <option value="1">学子</option>
                   <option value="2">教工</option>
                   <option value="3">游客</option>
                 </select>
-              </div>
-              <input type="text" v-model="form.joinYear" class="input" placeholder="请填写入学/入职年份">
-              <input type="text" v-model="form.joinDepartment" class="input" placeholder="请填写院系/部门">
-              <input type="text" v-model="form.userName" class="input" placeholder="请填写姓名">
-              <textarea  class="textarea" placeholder="请填写您的祝福语" v-model="form.messageContent"  maxlength="50">    
+              </div> -->
+              <!-- <input type="text" v-model="form.joinYear" class="input" placeholder="请填写入学/入职年份(选填)">
+              <input type="text" v-model="form.joinDepartment" class="input" placeholder="请填写院系/部门(选填)">
+              <input type="text" v-model="form.userName" class="input" placeholder="请填写姓名(选填)"> -->
+              <textarea  class="textarea" placeholder="请填写您的祝福语" v-model="form.messageContent">    
               </textarea>
               <!-- maxlength="50" -->
               <div class="sendBtn" @click="sengMessage">
@@ -114,7 +115,7 @@ export default {
       },
       disableSend:false,
       timer:null,
-      musicTF:false
+      musicTF:false,
     };
   },
   mounted() {
@@ -143,7 +144,7 @@ export default {
       },
     getListByTime(){
         this.getMessage()
-        this.timer=setTimeout(this.getListByTime,7000)
+        this.timer=setTimeout(this.getListByTime,1200)
     },
     // addToList() {
     //   for (let i = 0; i <= 10; i++) {
@@ -162,7 +163,7 @@ export default {
     getMessage(){
         this.axios.get("/leaveMessage/list",{
           params:{
-            messageType:1,
+            type:1,
             pageNo:this.pageNo,
             pageSize:this.pageSize
           }
@@ -172,7 +173,7 @@ export default {
           if(res.data.length>0){
               list.forEach((item,index) => {
                   item.msg=item.messageContent
-                  item.time=4
+                  item.time=3
                   item.type=MESSAGE_TYPE.NORMAL
                   //console.log(item)
                   this.list.push(item)
@@ -213,7 +214,7 @@ export default {
           console.log(res.data)
           let dm={...res.data}
           dm.msg=dm.messageContent
-          dm.time=5
+          dm.time=4
           dm.type=MESSAGE_TYPE.NORMAL
           dm.isMy=true
           this.barrageList.push(dm)
@@ -315,20 +316,21 @@ export default {
   display: flex;
 }
 .avatar {
-  display: inline-block;
+  /* display: inline-block; */
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 .dm {
-  display: inline-block;
+  /* display: inline-block; */
   padding-left: 7px;
-  font-size: 14px;
+  font-size: 14px !important;
   font-family: PingFang SC;
   font-weight: 400;
   color: #fff !important;
   position: relative;
   bottom: 5px;
+  -webkit-text-size-adjust: none;
 }
 .baberBox{
   height: 410px;
@@ -424,7 +426,7 @@ input::-webkit-input-placeholder{
 .textarea{
   font-size:14px;
   width:250px;
-  height: 50px;
+  height: 200px;
   border:none;
   border-bottom:1px solid #8F735D;
 }
@@ -528,7 +530,6 @@ input::-webkit-input-placeholder{
   }
   .red{
     color: red !important;
-    font-weight: bold;
     z-index: 999;
     position: relative;
   }
