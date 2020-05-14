@@ -65,7 +65,7 @@
                   </div>
               </div>
               <p class="detailMiddle">{{selDm.messageContent}}</p>
-              <p class="detailBottom">{{selDm.type===0?'系统':(selDm.type===1?'学子':(selDm.type===2?'教工':'游客'))}} {{selDm.user.receiveName}} {{selDm.user.joinDepartment}} {{selDm.user.joinYear}}</p>
+              <!-- <p class="detailBottom">{{selDm.type===0?'系统':(selDm.type===1?'学子':(selDm.type===2?'教工':'游客'))}} {{selDm.user.receiveName}} {{selDm.user.joinDepartment}} {{selDm.user.joinYear}}</p> -->
           </div>
         </div>
     </van-overlay>
@@ -503,15 +503,14 @@ input::-webkit-input-placeholder{
   }
   .detailMiddle{
     width:238px;
-    min-height: 39px;
-    text-overflow: -o-ellipsis-lastline;
+    /* text-overflow: -o-ellipsis-lastline;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    -webkit-box-orient: vertical;
-    margin: 38px auto;
+    -webkit-box-orient: vertical; */
+    margin: 58px auto;
     margin-bottom:0;
     font-size:14px;
     font-family:PingFang SC;
