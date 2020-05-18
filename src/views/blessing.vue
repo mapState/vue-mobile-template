@@ -102,7 +102,7 @@ export default {
         id:''
       },
       pageNo:1,
-      pageSize:10,
+      pageSize:8,
       total:'',
       selDm:{
         type:3,
@@ -144,7 +144,7 @@ export default {
       },
     getListByTime(){
         this.getMessage()
-        this.timer=setTimeout(this.getListByTime,1200)
+        this.timer=setTimeout(this.getListByTime,10500)
     },
     // addToList() {
     //   for (let i = 0; i <= 10; i++) {
@@ -173,7 +173,7 @@ export default {
           if(res.data.length>0){
               list.forEach((item,index) => {
                   item.msg=item.messageContent
-                  item.time=3
+                  item.time=6
                   item.type=MESSAGE_TYPE.NORMAL
                   //console.log(item)
                   this.list.push(item)
@@ -214,7 +214,7 @@ export default {
           console.log(res.data)
           let dm={...res.data}
           dm.msg=dm.messageContent
-          dm.time=4
+          dm.time=6
           dm.type=MESSAGE_TYPE.NORMAL
           dm.isMy=true
           this.barrageList.push(dm)
